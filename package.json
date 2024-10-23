@@ -1,0 +1,10 @@
+{
+  "name": "cloudflare-workers",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "deploy:all": "npm run deploy --workspace=packages/hreflang-worker && npm run deploy --workspace=packages/language-greeting"
+  }
+}
