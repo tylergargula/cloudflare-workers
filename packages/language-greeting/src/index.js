@@ -3,16 +3,16 @@ addEventListener('fetch', event => {
 })
 
 const languageGreetings = {
-    'en': 'Welcome!',
-    'es': '¡Bienvenidos!',
-    'fr': 'Bienvenue!',
-    'de': 'Willkommen!',
-    'it': 'Benvenuto!',
-    'pt': 'Bem-vindo!',
+    'en': 'WELCOME!',
+    'es': '¡BIENVENIDO!',
+    'fr': 'BIENVENUE!',
+    'de': 'WILLKOMMEN!',
+    'it': 'BENVENUTO!',
+    'pt': 'BEM-VINDO!',
     'ja': 'ようこそ!',
     'ko': '환영합니다!',
     'zh': '欢迎!',
-    'default': 'Welcome!'
+    'default': 'WELCOME!'
 };
 
 const locationGreetings = {
@@ -58,24 +58,30 @@ async function handleRequest(request) {
         return response
     }
 
-    // Get browser language
-    const acceptLanguage = request.headers.get('accept-language') || 'en'
-    const browserLanguage = acceptLanguage.split(',')[0].split('-')[0].toLowerCase()
+    // Get User-Agent first to check for bots
+    const userAgent = request.headers.get('user-agent') || ''
+    
+    let greetingContent = ''
+    if (userAgent.includes('Googlebot')) {
+        greetingContent = 'HELLO GOOGLEBOT! 🤖<br> Is this cloaking? You decide! (please rank my site better)'
+    } else {
+        // Only get language and location for non-bot visitors
+        const acceptLanguage = request.headers.get('accept-language') || 'en'
+        const browserLanguage = acceptLanguage.split(',')[0].split('-')[0].toLowerCase()
+        const country = request.cf?.country || 'default'
+        console.log('Detected country:', country)
 
-    // Get location information from request.cf
-    const country = request.cf?.country || 'default'
-    console.log('Detected country:', country)
-
-    // Get both greetings
-    const languageGreeting = languageGreetings[browserLanguage] || languageGreetings['default']
-    const locationGreeting = locationGreetings[country] || locationGreetings['default']
+        const languageGreeting = languageGreetings[browserLanguage] || languageGreetings['default']
+        const locationGreeting = locationGreetings[country] || locationGreetings['default']
+        
+        greetingContent = `${languageGreeting}<br>${locationGreeting}`
+    }
 
     let html = await response.text()
 
     const eyebrowHtml = `
     <div class="alignwide is-layout-constrained" style="
         font-size: 0.875rem;
-        text-transform: uppercase;
         letter-spacing: 0.1em;
         color: #666;
         font-weight: 500;
@@ -84,8 +90,7 @@ async function handleRequest(request) {
         max-width: var(--wp--style--global--wide-size);
         display: block;
     ">
-        ${languageGreeting}<br>
-        ${locationGreeting}
+        ${greetingContent}
     </div>
     `
 
