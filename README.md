@@ -11,7 +11,7 @@ Collection of Cloudflare Workers for tylergargula.dev
 
 ### SEO Edge Worker
 
-- Modifies HTML for Googlebot
-- Adds title and meta tags
+- Intercepts Googlebot requests and modifies HTML
+- Adds title and meta description
 - Adds canonical links
 - Adds additional meta tags
