@@ -1,0 +1,10 @@
+name = "seo-edge-worker"
+main = "src/index.js"
+compatibility_date = "2025-01-29"
+
+routes = [
+  "https://tylergargula.dev/*"
+]
+
+[observability.logs]
+enabled = true
