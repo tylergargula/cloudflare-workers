@@ -1,0 +1,10 @@
+name = "language-greeting-browser"
+main = "src/index.js"
+compatibility_date = "2024-10-01"
+
+routes = [
+  "https://tylergargula.dev",
+  "https://tylergargula.dev/",
+  "https://www.tylergargula.dev",
+  "https://www.tylergargula.dev/"
+]

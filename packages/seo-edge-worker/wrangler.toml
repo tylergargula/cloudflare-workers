@@ -3,8 +3,20 @@ main = "src/index.js"
 compatibility_date = "2025-01-29"
 
 routes = [
-  "https://tylergargula.dev/*"
+  { pattern = "https://tylergargula.dev/*", zone_id =  "065caf593a1720e9842c320d32d18c91"}
 ]
 
 [observability.logs]
 enabled = true
+
+[vars]
+PRERENDER_TOKEN="rwK9oA8Zzkp6Bm0cmnaW"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "seo-llm-content-db"
+database_id = "717f89b9-abd6-4d07-84f2-7604f8784ddd"
+
+[[services]]
+binding = "AI_REDIRECT"
+service = "ai-redirect-tracker"

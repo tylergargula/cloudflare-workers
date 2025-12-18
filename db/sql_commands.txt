@@ -1,0 +1,3 @@
+# at worker folder (ex: packages/llm-page-summaries)
+
+npx wrangler d1 execute seo-llm-content-db --remote --command="INSERT INTO page_content (url_path, llm_summary) VALUES ('/javascript-snippets-for-seo/', 'This article is for SEO analysts and web developers who want to quickly analyze web pages using JavaScript snippets in Chrome DevTools, saving time and enhancing their analysis capabilities.');"
