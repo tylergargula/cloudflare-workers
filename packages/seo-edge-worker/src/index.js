@@ -1,38 +1,6 @@
-import { isGoogleBot } from "./utils/userAgent";
 import { getRulesForUrl, shouldProcessUrl } from "./rules";
 import { updateMetadata } from "./utils/htmlParser";
 import { injectSummary } from "./utils/injector";
-import { BOT_AGENTS, IGNORE_EXTENSIONS } from "../prerender_config.js";
-
-async function handlePrerenderRequest(request, env) {
-  console.log("Prerender function executed", request.url);
-  const url = new URL(request.url);
-  const userAgent = request.headers.get("User-Agent")?.toLowerCase() || "";
-  const isPrerender = request.headers.get("X-Prerender");
-  const pathName = url.pathname.toLowerCase();
-  const extension = pathName
-    .substring(pathName.lastIndexOf(".") || pathName.length)
-    ?.toLowerCase();
-
-  if (
-    isPrerender ||
-    !BOT_AGENTS.some((bot) => userAgent.includes(bot)) ||
-    (extension.length && IGNORE_EXTENSIONS.includes(extension))
-  ) {
-    return null;
-  }
-
-  const newURL = `https://service.prerender.io/${request.url}`;
-  const newHeaders = new Headers(request.headers);
-  newHeaders.set("X-Prerender-Token", env.PRERENDER_TOKEN);
-
-  return fetch(
-    new Request(newURL, {
-      headers: newHeaders,
-      redirect: "manual",
-    })
-  );
-}
 
 async function getSummaryForPath(pathname, env) {
   try {
@@ -120,13 +88,8 @@ export default {
         return aiRedirectResponse;
       }
 
-      // Check for prerender first
-      let response = await handlePrerenderRequest(request, env);
-
-      // If no prerender response, get normal response
-      if (!response) {
-        response = await fetch(request);
-      }
+      // Fetch the normal response
+      const response = await fetch(request);
 
       // Ensure we have a valid response
       if (!response) {
@@ -150,7 +113,7 @@ export default {
         return response;
       }
 
-      // Process HTML regardless of whether it's prerendered or not
+      // Process HTML with SEO rules and database metadata
       const { html: processedHtml, modified } = await processHtml(
         html,
         url,
